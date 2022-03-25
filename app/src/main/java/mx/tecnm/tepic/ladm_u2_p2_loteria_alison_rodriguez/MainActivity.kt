@@ -27,26 +27,28 @@ class MainActivity : AppCompatActivity() {
         binding.btnver.isVisible  = false
         binding.btnpausa.isVisible  = false
 
-        binding.btnbarajear.setOnClickListener {
+        binding.btnbarajear.setOnClickListener {//Botón para barajear las cartas.
             cartas.shuffle()
-            mediaPlayer = MediaPlayer.create(this,R.raw.barajeason)
+            mediaPlayer = MediaPlayer.create(this,R.raw.barajeason)//sonido
             mediaPlayer.start()
         }
-        binding.btnplay.setOnClickListener{
+        binding.btnplay.setOnClickListener{// Botón para iniciar el juego (donde se tiran una a una).
             started = true
             binding.btnpausa.isVisible  = true
             binding.btnbarajear.isVisible  = false
             binding.btnplay.isVisible  = false
         }
-        binding.btnpausa.setOnClickListener{
+        binding.btnpausa.setOnClickListener{//Botón para cuando alguien grite LOTERÍA! Y se suspenda el juego.
             started = false
+            mediaPlayer = MediaPlayer.create(this,R.raw.ganar)//sonido
+            mediaPlayer.start()
             binding.btnver.isVisible  = true
             binding.btnplay.isVisible = false
             binding.btnbarajear.isVisible = false
             binding.btnpausa.isVisible = false
 
         }
-        binding.btnver.setOnClickListener {
+        binding.btnver.setOnClickListener { //Botón para verificar la CARTA del ganador.
             revisar = true
             binding.btnver.isVisible = false
         }
@@ -66,6 +68,7 @@ class MainActivity : AppCompatActivity() {
                     }
             }
         }
+        //La corrutina es la encargada de tirar las cartas, las suelta.
 //-------------------------------------------------------------------------------------------------
     }
     fun asigacion(){
@@ -82,8 +85,10 @@ class MainActivity : AppCompatActivity() {
         cartas.shuffle()
     }
 }
+//El metodo asignacion crea las cartas de imagenes con audios.
 //--------------------------------------------------------------------------------------------------
 class verCartaHilo(binding:ActivityMainBinding,main:MainActivity):Thread(){
+//El hilo se encarga de mostrar las cartas faltantes mediante el botón revisar (es un icono de ojito).
 
     var binding = binding
     var main = main
@@ -94,12 +99,12 @@ class verCartaHilo(binding:ActivityMainBinding,main:MainActivity):Thread(){
         while (true) {
                 if (main.revisar) {
                     main.runOnUiThread(){
-                        binding.imageView2.setImageResource(main.cartas[0].imagen)
+                        binding.imageView2.setImageResource(main.cartas[0].imagen)//Saca la carta siguiente,cambiando la imagen por la siguiente.
                     }
-                    main.mediaPlayer= MediaPlayer.create(main,main.cartas[0].audio)
+                    main.mediaPlayer= MediaPlayer.create(main,main.cartas[0].audio)//Saca el siguiente audio.
                     main.mediaPlayer.start()
                     main.cartas.removeAt(0)
-                    sleep(3000)
+                    sleep(2200)
                 }
                 if (main.cartas.size==0){
                     main.revisar = false
